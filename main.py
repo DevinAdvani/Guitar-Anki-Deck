@@ -8,19 +8,33 @@ def shift(input_note, semi_tones):
     return notes[position]
 
 def tab_to_note(input_tab):
-    output = ""
+    output = []
     for i in range(0,6):
-        output += shift(tunings[i], int(input_tab[2 * i]))
-        output += " "
-    return output
+        if (input_tab[i] != 'X'):
+            output.append(shift(tunings[i], input_tab[i]))
+    return set(output)
 
-max_fret = 3
+start = -1
+max_fret = 5
+"""
+for a in range(start, max_fret+1):
+    for b in range(start, max_fret+1):
+        for c in range(start, max_fret+1):
+            for d in range(start, max_fret+1):
+                for e in range(start, max_fret+1):
+                    for f in range(start, max_fret+1):
+                        tab = [a,b,c,d,e,f]
+                        for i in range(0,6):
+                            if (tab[i] == -1):
+                                tab[i] = "X"
+                        if tab_to_note(tab) == {"C", "F"}:
+                            print(tab)
+"""
 
-for a in range(0, max_fret+1):
-    for b in range(0, max_fret+1):
-        for c in range(0, max_fret+1):
-            for d in range(0, max_fret+1):
-                for e in range(0, max_fret+1):
-                    for f in range(0, max_fret+1):
-                        print(str(a) + " " + str(b) + " " +  str(c) + " " +  str(d) + " " +  str(e) + " " +  str(f))
-                        print(tab_to_note(str(a) + " " + str(b) + " " +  str(c) + " " +  str(d) + " " +  str(e) + " " +  str(f)))
+chord = [0,4,7]
+
+for i in range(0,12):
+    output = []
+    for j in chord:
+        output.append(notes[(i+j)%12])
+    print(set(output))
