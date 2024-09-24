@@ -3,9 +3,9 @@ import genanki
 tunings = "EADGBE"#"DADGAD"
 notes = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"]
 start = -1
-max_fret = 5
-chord_shapes = [[0,4,7], [0,3,7], [0,4,7,11]]
-chord_names = ["Major", "Minor", "Major 7"]
+max_fret = 2#12
+chord_shapes = [[0,4,7]]#,[0,4,7,11],[0,4,7,9]]
+chord_names = ["Major", "Major 7", "6", "6/9", "Major 9", "Major 11", "Minor", "Minor 7", "Minor 6", "Minor 6/9", "Minor 9", "Minor 11", "Minor Major 7", "Minor Major 9", "7", "9", "11", "Diminished", "Diminished 7", "Half-Diminished", "Augmented", "Augmented 7", "7-5", "7+5", "7-9", "7+9", "7#11", "5", "Add 9", "Add 2", "Add 11", "Add 4", "Suspended 4", "Suspended 2"]
 
 def shift(input_note, semi_tones):
     position = notes.index(input_note)
@@ -65,6 +65,12 @@ def produce_all_chord_tabs(chord_shape_list, chord_names_list):
             output[1].append(chord_output[1][j])
     return output
 
+def reduce_tabs(input_tab):
+    minimum = min(input_tab)
+    for i in range(0,6):
+        input_tab[i] -= minimum 
+    return input_tab
+
 the_list = produce_all_chord_tabs(chord_shapes, chord_names)
 
 my_model = genanki.Model(
@@ -89,6 +95,6 @@ for i in range(0,len(the_list[0])):
     for j in range(0,len(the_list[1][i])):
         my_note = genanki.Note(
         model=my_model,
-        fields=[str(the_list[0][i] + " " + str(j)), str(the_list[1][i][j])])
+        fields=[str(the_list[0][i] + " " + str(reduce_tabs(the_list[1][i][j]))), str(the_list[1][i][j])])
         my_deck.add_note(my_note)
-    genanki.Package(my_deck).write_to_file( tunings + " " + the_list[0][i] + '.apkg')
+    genanki.Package(my_deck).write_to_file(tunings + " " + the_list[0][i] + '.apkg')
