@@ -2,6 +2,10 @@ import genanki
 
 tunings = "EADGBE"#"DADGAD"
 notes = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"]
+start = -1
+max_fret = 5
+chord_shapes = [[0,4,7],[0,3,7]]
+chord_names = ["Major", "Minor"]
 
 def shift(input_note, semi_tones):
     position = notes.index(input_note)
@@ -15,10 +19,6 @@ def tab_to_note(input_tab):
         if (input_tab[i] != 'X'):
             output.append(shift(tunings[i], input_tab[i]))
     return set(output)
-
-start = -1
-max_fret = 5
-guitar_notes = set(["C","E","G"])
 
 def chord_to_chromatic_notes(input_chord_list):
     output = []
@@ -44,17 +44,26 @@ def produce_tabs(input_start, input_max_fret, input_notes):
                                     tab[i] = "X"
                                     count += 1
                             if tab_to_note(tab) == input_notes:
-                                if count <= 1:
+                                if count <= 0:
                                     tabs.append(tab)
     return tabs
 
-def produce_chord_tabs(input_chord_list):
+def produce_chord_tabs(input_chord_list, chord_name):
     chord_list = chord_to_chromatic_notes(input_chord_list)
+    output = [[],[]]
     for i in range(0,12):
-        print(notes[i])
-        print(produce_tabs(start, max_fret, chord_list[i]))
+        output[0].append(notes[i] + " " + chord_name)
+        output[1].append(produce_tabs(start, max_fret, chord_list[i]))
+    return output
+
+def produce_all_chord_tabs(chord_shape_list, chord_names_list):
+    output = [[],[]]
+    for i in range(0,len(chord_shape_list)):
+        chord_output = produce_chord_tabs(chord_shape_list[i], chord_names_list[i])
+        for j in range(0,len(chord_output[0])):
+            output[0].append(chord_output[0][j])
+            output[1].append(chord_output[1][j])
+    return output
 
 
-#print(produce_tabs(start, max_fret, guitar_notes))
-
-produce_chord_tabs([0, 4, 7])
+print(produce_all_chord_tabs(chord_shapes, chord_names))
