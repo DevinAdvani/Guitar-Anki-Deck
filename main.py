@@ -4,8 +4,8 @@ tunings = "EADGBE"#"DADGAD"
 notes = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"]
 start = -1
 max_fret = 5
-chord_shapes = [[0,4,7],[0,3,7]]
-chord_names = ["Major", "Minor"]
+chord_shapes = [[0,4,7], [0,3,7], [0,4,7,11]]
+chord_names = ["Major", "Minor", "Major 7"]
 
 def shift(input_note, semi_tones):
     position = notes.index(input_note)
