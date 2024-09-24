@@ -65,5 +65,30 @@ def produce_all_chord_tabs(chord_shape_list, chord_names_list):
             output[1].append(chord_output[1][j])
     return output
 
+the_list = produce_all_chord_tabs(chord_shapes, chord_names)
 
-print(produce_all_chord_tabs(chord_shapes, chord_names))
+my_model = genanki.Model(
+  1607392319,
+  'Simple Model',
+  fields=[
+    {'name': 'Question'},
+    {'name': 'Answer'},
+  ],
+  templates=[
+    {
+      'name': 'Card 1',
+      'qfmt': '{{Question}}',
+      'afmt': '{{FrontSide}}<hr id="answer">{{Answer}}',
+    },
+  ])
+
+for i in range(0,len(the_list[0])):
+    my_deck = genanki.Deck(
+    2059400110,
+    'Guitar Chords::' + tunings + '::' + the_list[0][i])
+    for j in range(0,len(the_list[1][i])):
+        my_note = genanki.Note(
+        model=my_model,
+        fields=[str(the_list[0][i] + " " + str(j)), str(the_list[1][i][j])])
+        my_deck.add_note(my_note)
+    genanki.Package(my_deck).write_to_file( tunings + " " + the_list[0][i] + '.apkg')
