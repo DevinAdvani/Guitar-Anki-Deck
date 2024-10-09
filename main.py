@@ -4,7 +4,7 @@ tunings = "EADGBE"
 notes = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"]
 start_fret = -1
 max_fret = 2#12
-chord_shapes = [[0,4,7], [0,4,7,9]]
+chord_shapes = [[0,4,7], [0,4,7,11], [0,4,7,9], [0,4,7,9,14], [0,4,7,9,14], [0,4,7,9,14,17], [0,3,7],[0,3,7,10], [0,3,7,9],[0,3,7,9,14],[0,3,7,10,14], [0,3,7,10,14,17], [0,3,7,11], [0,3,7,11,14], [0,4,7,10], [0,4,7,10,14], [0,4,7,10,14,17], [0,3,6], [0,3,6,9], [0,3,6,10],[0,4,8],[0,4,8,10], [0,4,6,10], [0,4,8,10], [0,4,7,10,13], [0,4,7,10,15], [0,4,7,10,18], [0,7],[0,4,7,14], [0,2,4,7],[0,4,7,17],[0,4,5,7], [0,5,7], [0,2,7]]
 overall_chord_names = ["Major", "Major 7", "6", "6/9", "Major 9", "Major 11", "Minor", "Minor 7", "Minor 6", "Minor 6/9", "Minor 9", "Minor 11", "Minor Major 7", "Minor Major 9", "7", "9", "11", "Diminished", "Diminished 7", "Half-Diminished", "Augmented", "Augmented 7", "7-5", "7+5", "7-9", "7+9", "7#11", "5", "Add 9", "Add 2", "Add 11", "Add 4", "Suspended 4", "Suspended 2"]
 chord_notes = []
 chord_names = []
@@ -79,12 +79,13 @@ def make_deck():
     for i in range(0,len(output_tabs)):
         try:
             other_side = chord_names[chord_notes.index(tab_to_note(output_tabs[i]))]
+            my_note = genanki.Note(
+            model=my_model,
+            fields=[tunings + " " + str(output_tabs[i]), other_side])
+            my_deck.add_note(my_note)
         except:
-            other_side =  str(tab_to_note(output_tabs[i]))
-        my_note = genanki.Note(
-        model=my_model,
-        fields=[tunings + " " + str(output_tabs[i]), other_side])
-        my_deck.add_note(my_note)
+            pass
+
         
     genanki.Package(my_deck).write_to_file(tunings + " until " + str(max_fret) + '.apkg')
 
