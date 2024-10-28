@@ -1,16 +1,18 @@
 import genanki
 import os
 
-tunings = "EADGBE"#"DADGAD"
+#Improve with better file sorting for amount of notes used and different keys but basically functional
+
+tunings = "EADGBE"#"DADGAD" Make it so sharps get registered
 notes = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"]
 start_fret = -1
-max_fret = 1
+max_fret = 2
 chord_shapes = [[0,4,7], [0,4,7,11], [0,4,7,9], [0,4,7,9,14], [0,4,7,9,14], [0,4,7,9,14,17], [0,3,7],[0,3,7,10], [0,3,7,9],[0,3,7,9,14],[0,3,7,10,14], [0,3,7,10,14,17], [0,3,7,11], [0,3,7,11,14], [0,4,7,10], [0,4,7,10,14], [0,4,7,10,14,17], [0,3,6], [0,3,6,9], [0,3,6,10],[0,4,8],[0,4,8,10], [0,4,6,10], [0,4,8,10], [0,4,7,10,13], [0,4,7,10,15], [0,4,7,10,18], [0,7],[0,4,7,14], [0,2,4,7],[0,4,7,17],[0,4,5,7], [0,5,7], [0,2,7]]
 overall_chord_names = ["Major", "Major 7", "6", "69", "Major 9", "Major 11", "Minor", "Minor 7", "Minor 6", "Minor 69", "Minor 9", "Minor 11", "Minor Major 7", "Minor Major 9", "7", "9", "11", "Diminished", "Diminished 7", "Half-Diminished", "Augmented", "Augmented 7", "7-5", "7+5", "7-9", "7+9", "7#11", "5", "Add 9", "Add 2", "Add 11", "Add 4", "Suspended 4", "Suspended 2"]
-chord_notes = [] # fix slashes
+chord_notes = [] # fix slashes for 6/9
 chord_names = []
 
-for i in overall_chord_names:
+for i in overall_chord_names:#Add overall Guitar Chords Folder
     try:
         os.rmdir(tunings + "/" + i)
     except:
@@ -21,7 +23,10 @@ try:
 except:
     pass
 
-os.mkdir(tunings)
+try:
+    os.mkdir(tunings)
+except:
+    pass
 
 for i in overall_chord_names:
     try:
@@ -37,8 +42,6 @@ def pitch_up_a_tab(input_tab):
         except:
             output_tab.append("X")
     return output_tab
-
-#print(pitch_up_a_tab([1,"X",3,4,5,"X"]))
 
 def shift(input_note, semi_tones):
     position = notes.index(input_note)
@@ -94,10 +97,11 @@ for i in range(0,len(open_chords)):
     except:
         pass
 
+def produce_anki_deck(input_tab):
 
-"""
-def make_deck():
-    output_tabs = produce_tabs(start_fret, max_fret)
+    my_deck = genanki.Deck(
+    2059400110,
+    "Guitar Chords::" + tunings + "::" + input_tab[0][2:]+ "::" + input_tab[0] + " " + str(input_tab[1]))
 
     my_model = genanki.Model(
     1607392319,
@@ -114,21 +118,23 @@ def make_deck():
         },
     ])
 
-    my_deck = genanki.Deck(
-    2059400110,
-    'Guitar Chords::' + tunings + " until " + str(max_fret))
+    toned_up_tab = input_tab[1]
+    toned_up_note = input_tab[0][0]
 
-    for i in range(0,len(output_tabs)):
-        try:
-            other_side = chord_names[chord_notes.index(tab_to_note(output_tabs[i]))]
-            my_note = genanki.Note(
-            model=my_model,
-            fields=[tunings + " " + str(output_tabs[i]), other_side])
-            my_deck.add_note(my_note)
-        except:
-            pass
+    for i in range(0, 12):
+        my_note = genanki.Note(
+        model=my_model,
+        fields=[str(toned_up_tab), toned_up_note + input_tab[0][1:]])
 
-        
-    genanki.Package(my_deck).write_to_file(tunings + " until " + str(max_fret) + '.apkg')
+        toned_up_tab = pitch_up_a_tab(toned_up_tab)
+        toned_up_note = shift(toned_up_note, 1)
 
-"""
+        my_deck.add_note(my_note)
+
+    genanki.Package(my_deck).write_to_file(tunings + "/" + input_tab[0][2:] + "/" + input_tab[0] + " " + str(input_tab[1]) + '.apkg')
+
+for i in range(0,len(chords)):
+    try:
+        produce_anki_deck(chords[i])
+    except:
+        pass
