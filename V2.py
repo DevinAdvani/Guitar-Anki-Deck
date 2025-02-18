@@ -15,38 +15,35 @@ while start_note != end_note:
     
 guitar_notes = [["E",2],["A",2],["D",3],["G",3],["B",3],["E",4]]
 
-limit = guitar_notes
-
-fretted_notes = []
+guitar_strings = []
 
 for i in range(0,6):
-    base_note = guitar_notes[i]
-    for j in range(0,21):
-        tab = ["X","X","X","X","X","X"]
-        tab[i] = j
-        fretted_notes.append([tab, base_note])
-        base_note = next_note(base_note)
+    note = guitar_notes[i]
+    string = [note]
+    for j in range(0,20):
+        note = next_note(note)
+        string.append(note)
+    guitar_strings.append(string)
 
+# notes - Assumption that there are no breaks in notes (i.e. there isn't a string that is 20 semitones higher) and that the last string is the highest string and the first is the lowest
 
-print(fretted_notes)
+guitar_range = [guitar_notes[0]]
 
-# notes
+while True:
+    guitar_range.append(next_note(guitar_range[-1]))
+    if guitar_range[-1] == guitar_strings[5][-1]:
+        break
 
-cards = []
-starting_note = ["E", 2]
-ending_note = ["E", 4]
+note_flashcards = []
 
-while start_note != ending_note:
-    for x in fretted_notes:
-        if fretted_notes[1] == starting_note:
-            cards.append(x)
-    starting_note = next_note(starting_note)
-
-for x in cards:
-    print(x)
-    print(" ")
-
-
+for x in guitar_range:
+    tab = []
+    for i in range(0,6):
+        try:
+            tab.append(guitar_strings[i].index(x))
+        except:
+            tab.append("X")
+    note_flashcards.append([x,tab])
 
 # chords - smart reverse note method 
 
