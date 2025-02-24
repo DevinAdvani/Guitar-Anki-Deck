@@ -1,3 +1,5 @@
+import genanki
+
 keyboard_notes = []
 octave_notes = ["A", "A#", "B", "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#"]
 start_note = ["A", 0]
@@ -45,6 +47,46 @@ for x in guitar_range:
             tab.append("X")
     note_flashcards.append([x,tab])
 
+my_model = genanki.Model(
+  1607392319,
+  'Simple Model',
+  fields=[
+    {'name': 'Question'},
+    {'name': 'Answer'},
+  ],
+  templates=[
+    {
+      'name': 'Card 1',
+      'qfmt': '{{Question}}',
+      'afmt': '{{FrontSide}}<hr id="answer">{{Answer}}',
+    },
+  ])
+
+my_deck = genanki.Deck(
+  2059400110,
+  'EADGBE')
+
+for x in note_flashcards:
+    my_note = genanki.Note(
+    model=my_model,
+    fields=[str(x[0]), str(x[1])])
+
+    my_deck.add_note(my_note)
+
+genanki.Package(my_deck).write_to_file('EADGBE.apkg')
+
 # chords - smart reverse note method 
+
+chord_names = ["Major"]
+chord_tabs = [[0,4,7]]
+
+chord_notes = []
+for x in octave_notes:
+    notes = []
+    for y in chord_tabs:
+        for z in y:
+            notes.append(octave_notes[z])
+    chord_notes.append(notes)
+#print(chord_notes)
 
 # scales
